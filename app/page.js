@@ -358,14 +358,15 @@ const MicrogreensTracker = () => {
                             {status.text}
                           </span>
                         </div>
+                        <p>
+                          <strong>Creation Date:</strong>{" "}
+                          {new Date(grower.startDate).toLocaleDateString()}
+                        </p>
                         <div className="space-y-1 text-gray-600">
                           <p>
                             <strong>Variety:</strong> {grower.variety}
                           </p>
-                          <p>
-                            <strong>Started:</strong>{" "}
-                            {new Date(grower.startDate).toLocaleDateString()}
-                          </p>
+
                           {grower.startDay > 0 && (
                             <p className="text-sm text-blue-600">
                               (Added on day {grower.startDay})
