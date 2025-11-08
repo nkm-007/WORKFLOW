@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Plus, Check, Calendar, Sprout, Instagram } from "lucide-react";
 
@@ -12,8 +13,9 @@ const MicrogreensTracker = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [shouldVibrate, setShouldVibrate] = useState(false);
+  const [hasVibrated, setHasVibrated] = useState(false);
 
-  // Load data on mount
+  // Load data on mount and check Instagram day ONCE
   useEffect(() => {
     loadData();
     checkInstagramDay();
@@ -148,9 +150,20 @@ const MicrogreensTracker = () => {
   };
 
   const finishGrowing = async (id) => {
-    const updated = activeGrowers.filter((g) => g.id !== id);
-    setActiveGrowers(updated);
-    await saveData(updated);
+    try {
+      // Delete from database
+      await fetch("/api/growers", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+
+      // Update UI
+      const updated = activeGrowers.filter((g) => g.id !== id);
+      setActiveGrowers(updated);
+    } catch (error) {
+      console.error("Error finishing grower:", error);
+    }
   };
 
   const getNotificationStatus = (days) => {
